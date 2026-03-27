@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Duel Racer</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- HOME SCREEN -->
+  <section id="screen-home" class="screen active">
+    <div class="home-bg"></div>
+    <div class="home-content">
+      <div class="logo">
+        <span class="logo-icon">🏁</span>
+        <h1>Duel Racer</h1>
+        <p class="tagline">1 vs 1 &nbsp;·&nbsp; 15 Levels &nbsp;·&nbsp; Pure Speed</p>
+      </div>
+      <nav class="home-nav">
+        <button class="btn btn-primary" id="btn-start">Start Race</button>
+        <button class="btn btn-secondary" id="btn-cars">Select Car</button>
+        <button class="btn btn-secondary" id="btn-levels">Select Level</button>
+        <button class="btn btn-secondary" id="btn-records">Best Times</button>
+        <button class="btn btn-ghost" id="btn-controls">Controls</button>
+      </nav>
+    </div>
+  </section>
+
+  <!-- CAR SELECTION SCREEN -->
+  <section id="screen-cars" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" id="cars-back">← Back</button>
+      <h2>Select Your Car</h2>
+    </div>
+    <div class="cars-grid" id="cars-grid"></div>
+    <div class="screen-footer">
+      <button class="btn btn-primary" id="cars-confirm">Confirm Selection</button>
+    </div>
+  </section>
+
+  <!-- LEVEL SELECTION SCREEN -->
+  <section id="screen-levels" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" id="levels-back">← Back</button>
+      <h2>Select Level</h2>
+    </div>
+    <div class="levels-grid" id="levels-grid"></div>
+    <div class="screen-footer">
+      <button class="btn btn-primary" id="levels-confirm">Race!</button>
+    </div>
+  </section>
+
+  <!-- RACE SCREEN -->
+  <section id="screen-race" class="screen">
+    <div class="race-hud">
+      <div class="hud-left">
+        <div class="hud-item">
+          <span class="hud-label">LEVEL</span>
+          <span class="hud-value" id="hud-level">1</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">SPEED</span>
+          <span class="hud-value" id="hud-speed">0 <small>km/h</small></span>
+        </div>
+      </div>
+      <div class="hud-center">
+        <div class="hud-item">
+          <span class="hud-label">TIME</span>
+          <span class="hud-value" id="hud-time">0:00.00</span>
+        </div>
+        <div class="race-progress-bar">
+          <div class="progress-track">
+            <div class="progress-player" id="progress-player"></div>
+            <div class="progress-npc" id="progress-npc"></div>
+          </div>
+          <span class="progress-label-l">Start</span>
+          <span class="progress-label-r">Finish</span>
+        </div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-item">
+          <span class="hud-label">NPC</span>
+          <span class="hud-value" id="hud-npc-progress">0%</span>
+        </div>
+        <button class="btn-pause" id="btn-pause" title="Pause (P)">⏸</button>
+      </div>
+    </div>
+
+    <canvas id="race-canvas"></canvas>
+
+    <div class="countdown-overlay" id="countdown-overlay">
+      <span id="countdown-text">3</span>
+    </div>
+
+    <div class="pause-overlay" id="pause-overlay" style="display:none">
+      <div class="pause-card">
+        <h2>Paused</h2>
+        <button class="btn btn-primary" id="btn-resume">Resume</button>
+        <button class="btn btn-secondary" id="btn-restart">Restart</button>
+        <button class="btn btn-ghost" id="btn-quit">Quit to Menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS SCREEN -->
+  <section id="screen-results" class="screen">
+    <div class="results-card">
+      <div class="results-winner" id="results-winner">
+        <span id="results-winner-icon">🏆</span>
+        <h2 id="results-winner-text">You Win!</h2>
+      </div>
+      <div class="results-times">
+        <div class="result-row player-row">
+          <span class="result-label">Your Time</span>
+          <span class="result-time" id="results-player-time">--</span>
+        </div>
+        <div class="result-row npc-row">
+          <span class="result-label">NPC Time</span>
+          <span class="result-time" id="results-npc-time">--</span>
+        </div>
+        <div class="result-row best-row">
+          <span class="result-label">Best Record</span>
+          <span class="result-time" id="results-best-time">--</span>
+          <span class="record-badge" id="results-new-record" style="display:none">NEW RECORD!</span>
+        </div>
+      </div>
+      <div class="results-actions">
+        <button class="btn btn-primary" id="btn-retry">Retry</button>
+        <button class="btn btn-secondary" id="btn-next-level">Next Level</button>
+        <button class="btn btn-ghost" id="btn-results-home">Home</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECORDS SCREEN -->
+  <section id="screen-records" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" id="records-back">← Back</button>
+      <h2>Best Times</h2>
+    </div>
+    <div class="records-list" id="records-list"></div>
+  </section>
+
+  <!-- CONTROLS SCREEN -->
+  <section id="screen-controls" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" id="controls-back">← Back</button>
+      <h2>Controls</h2>
+    </div>
+    <div class="controls-content">
+      <div class="controls-group">
+        <h3>Driving</h3>
+        <div class="key-row"><kbd>W</kbd> or <kbd>↑</kbd> <span>Accelerate</span></div>
+        <div class="key-row"><kbd>S</kbd> or <kbd>↓</kbd> <span>Brake / Reverse</span></div>
+        <div class="key-row"><kbd>A</kbd> or <kbd>←</kbd> <span>Steer Left</span></div>
+        <div class="key-row"><kbd>D</kbd> or <kbd>→</kbd> <span>Steer Right</span></div>
+      </div>
+      <div class="controls-group">
+        <h3>Race</h3>
+        <div class="key-row"><kbd>P</kbd> or <kbd>Esc</kbd> <span>Pause / Resume</span></div>
+        <div class="key-row"><kbd>R</kbd> <span>Restart Race</span></div>
+      </div>
+      <div class="controls-group">
+        <h3>Goal</h3>
+        <p>Complete a lap of the track before the NPC to win. Each level features a unique circuit with increasing difficulty. Beat your best times to set new records!</p>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/storage.js"></script>
+  <script src="js/cars.js"></script>
+  <script src="js/levels.js"></script>
+  <script src="js/physics.js"></script>
+  <script src="js/npc.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
