@@ -101,7 +101,7 @@ const Game = (() => {
     // Player physics
     if (!playerLap.finished) {
       Physics.update(player, currentCar, input, dt, currentLevel.id);
-      clampToTrack(player, currentLevel.waypoints, currentLevel.trackWidth);
+      clampToTrack(player, playerLap, currentLevel.waypoints, currentLevel.trackWidth);
       updateProgress(player, playerLap, currentLevel.waypoints);
       if (playerLap.finished && playerLap.time === 0) {
         playerLap.time = raceElapsed;
@@ -164,10 +164,15 @@ const Game = (() => {
   }
 
   // ─── Boundary Clamp ────────────────────────────────────────
-  function clampToTrack(carState, waypoints, trackWidth) {
-    // Find nearest waypoint
+  function clampToTrack(carState, lapState, waypoints, trackWidth) {
     let minDist = Infinity, nearX = carState.x, nearY = carState.y;
-    for (const wp of waypoints) {
+    // Only search local waypoints (+/- 15 steps)
+    // This perfectly prevents the physics wall from mistakenly locking onto perpendicular roads at intersections.
+    const range = 15;
+    for (let i = -range; i <= range; i++) {
+      let idx = (lapState.waypointIdx + i) % waypoints.length;
+      if (idx < 0) idx += waypoints.length;
+      const wp = waypoints[idx];
       const dx = carState.x - wp.x;
       const dy = carState.y - wp.y;
       const d  = Math.sqrt(dx * dx + dy * dy);
@@ -180,10 +185,11 @@ const Game = (() => {
       const dy = nearY - carState.y;
       const mag = Math.sqrt(dx * dx + dy * dy);
       const over = minDist - limit;
-      carState.x += (dx / mag) * over * 0.9;
-      carState.y += (dy / mag) * over * 0.9;
-      // Soft drift penalty instead of harsh stop
-      carState.speed *= 0.92;
+      // Solid boundary reflection (push back exactly outside the wall)
+      carState.x += (dx / mag) * over * 1.01;
+      carState.y += (dy / mag) * over * 1.01;
+      // Soft drift penalty (Reduced to 5% as requested)
+      carState.speed *= 0.95;
     }
   }
 

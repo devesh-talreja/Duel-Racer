@@ -36,9 +36,37 @@ const LEVELS = [
   {
     id: 4, name: 'Clover Circuit',   theme: '#f43f5e', difficulty: 4,
     npcSpeed: 0.52, npcMistake: 0.035,
-    trackWidth: 130,
+    trackWidth: 115,
     bgColor: '#1a0f14', roadColor: '#2d1622', kerb1: '#f43f5e', kerb2: '#881337',
     waypoints: alignTrackStart(buildClover(400, 300, 50, 3)), // Wider inner void, rotated logically
+  },
+  {
+    id: 5, name: 'Neon Cross',       theme: '#06b6d4', difficulty: 4,
+    npcSpeed: 0.55, npcMistake: 0.03,
+    trackWidth: 130,
+    bgColor: '#0a101a', roadColor: '#121828', kerb1: '#06b6d4', kerb2: '#164e63',
+    waypoints: alignTrackStart(buildClover(400, 300, 55, 4, 0)), // 4-leaf shape, Plus configuration
+  },
+  {
+    id: 6, name: 'Twin Void',        theme: '#8b5cf6', difficulty: 5,
+    npcSpeed: 0.58, npcMistake: 0.025,
+    trackWidth: 120,
+    bgColor: '#16121f', roadColor: '#1e1a2f', kerb1: '#8b5cf6', kerb2: '#4c1d95',
+    waypoints: alignTrackStart(buildPeanut(400, 300, 320, 500)), // Parametric Pinched Bone Layout
+  },
+  {
+    id: 7, name: 'Binary Orbit',     theme: '#fcd34d', difficulty: 5,
+    npcSpeed: 0.62, npcMistake: 0.02,
+    trackWidth: 110,
+    bgColor: '#191505', roadColor: '#28200a', kerb1: '#fcd34d', kerb2: '#b45309',
+    waypoints: alignTrackStart(buildClover(400, 300, 60, 2, Math.PI / 2)), // 2-leaf pinched oval rotated natively
+  },
+  {
+    id: 8, name: 'Velocity Box',     theme: '#10b981', difficulty: 6,
+    npcSpeed: 0.65, npcMistake: 0.015,
+    trackWidth: 105,
+    bgColor: '#051810', roadColor: '#0a2318', kerb1: '#10b981', kerb2: '#047857',
+    waypoints: alignTrackStart(buildRoundedRect(120, 80, 680, 520, 60)), // Massive straightaways with tight 60px corners
   }
 ];
 
@@ -157,5 +185,21 @@ function buildClover(cx, cy, scale, leaves, angleOffset = 0) {
   }
   return pts;
 }
+
+function buildPeanut(cx, cy, rx, ry) {
+  const pts = [];
+  const steps = 100;
+  for (let i = 0; i < steps; i++) {
+    const t = (i / steps) * Math.PI * 2;
+    const x = cx + rx * Math.cos(t);
+    // Pinches the y-axis inwards by 65% when approaching horizontal middle
+    const pinch = 1 - 0.65 * Math.pow(Math.sin(t), 2);
+    const y = cy + ry * Math.sin(t) * pinch;
+    pts.push({ x, y });
+  }
+  return pts;
+}
+
+
 
 
