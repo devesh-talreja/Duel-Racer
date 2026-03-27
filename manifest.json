@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Duel Racer",
   "version": "1.0.0",
-  "description": "1v1 duel car racing game - Race against the NPC through 15 challenging levels!",
+  "description": "1v1 duel car racing game - Race against the NPC through 10 challenging levels!",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
